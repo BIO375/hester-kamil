@@ -122,3 +122,8 @@ ggplot(Sanchez)+
 # Excute code for beetle density after data transformation boxplot
 ggplot(Sanchez)+
             geom_boxplot(aes(x = COLTYPE, y = log_BEETLE96), varwidth = TRUE)
+
+
+
+### Great job annotating your code! 
+### GRADE: 10/10 code runs without breaking ####

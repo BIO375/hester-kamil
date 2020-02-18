@@ -33,6 +33,14 @@ summ_Lovett <- Lovett %>%
             var_SO4 = var(SO4),
             se_SO4 = sd(SO4)/sqrt(n()))
 
+summ_LovettMOD <- Lovett %>%
+  summarise(mean_modSO4 = mean(SO4MOD),
+            median_modSO4 = median(SO4MOD),
+            IQR_modSO4 = IQR(SO4MOD),
+            sd_modSO4 = sd(SO4MOD),
+            var_modSO4 = var(SO4MOD),
+            se_modSO4 = sd(SO4MOD)/sqrt(n()))
+
 ### Plot histograms of SO4 and Modified SO4 ####
 
 # Excute code for SO4 histogram

@@ -65,7 +65,7 @@ ggplot(data = mpg) +
 # 5. What happens if you make a scatterplot of class vs drv? Why is the plot not useful?
 ggplot(data = mpg) +
   geom_point(mapping = aes(x = class, y = drv))
-# When a scatterplot of class vs drv is generated the type of car is on the z-axis while the type of drive is on the y-axis. 
+# When a scatterplot of class vs drv is generated the type of car is on the x-axis while the type of drive is on the y-axis. 
 # This type of plot is not very useful because neither variable used is numerical, so quantifiable data cannot be extracted from the plot
 
 # 3.3 Aesthetic mappings
@@ -165,18 +165,18 @@ ggplot(data = mpg) +
   geom_point(mapping = aes(x = drv, y = cyl))
 
 # The empty cells in the plot mean there are no rear drive cars with 4 and 5 cylinder engines.
-# The facet plot provides information that is not as inutivitely conveyed by the simple scatterplot drv vs. cyl.
+# The facet plot provides information that is not as inutivitely conveyed by the simple scatterplot of drv vs. cyl.
 
 # 3. What plots does the following code make? What does . do?
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy)) +
   facet_grid(drv ~ .)
-# This code generates a scatterplot of hwy vs. displ sorted into four column representing the categories of cyl (4, 5, 6, 8).
+# This code generates a scatterplot of hwy vs. displ sorted into three rows representing the categories of drv (4, f, r).
 
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy)) +
   facet_grid(. ~ cyl)
-#  This code generates a scatterplot of hwy vs. displ sorted into three rows representing the categories of drv (4, f, r).
+# This code generates a scatterplot of hwy vs. displ sorted into four column representing the categories of cyl (4, 5, 6, 8).
 
 # The period allows for the variable to be made a facet as a row or column without a second variable shown. 
 
@@ -186,9 +186,9 @@ ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy)) + 
   facet_wrap(~ class, nrow = 2)
 
-# The advantages of using faceting instead of color aesthetic is that the data that seperated and easier to analyse individually faceted.
+# The advantages of using faceting instead of color aesthetic is that the data that separated and easier to analyse individually faceted.
 # The disadvantage is that its harder to get a grasp of the whole picture of the data trends.
-# With a larger dataset it would be better to use faceting because of the large volume of points, making the plot messier.
+# With a larger dataset it would be better to use faceting because of the large volume of points makes a scatterplot messier.
 
 # 5. Read ?facet_wrap. What does nrow do? What does ncol do? What other options control the layout of the individual panels? 
 # Why doesn’t facet_grid() have nrow and ncol arguments? 
@@ -253,7 +253,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
   geom_point() + 
   geom_smooth(se = FALSE)
 
-# I predict that this plot will look like a scatter plot of displ vs hwy with the points in three different colors to reporesent drv. 
+# I predict that this plot will look like a scatter plot of displ vs hwy with the points in three different colors to represent drv. 
 # There will also be a smooth layer possibly for points outside the range of the mean. 
 # After running the code I realized that the smooth layer was to present all points in each of the three drv categories.
 
@@ -308,7 +308,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
 # Graph 6.
 ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
   geom_point(mapping = aes(fill = drv), shape = 21, stroke = 2, colour = "white", size = 3) 
-# Looked this one up on github because wasn't sure how to make white effect. 
+# Looked this one up on github because wasn't sure how to make white border effect. 
 
 # 3.7 Statistical transformations
 
@@ -357,7 +357,7 @@ ggplot(data = diamonds) +
 
 # 2. What does geom_col() do? How is it different to geom_bar()?
 
-# geom_col() does not modify data, while geom_bar() makes it into a bar graph while calculating new y-axis to make count or prop.
+# geom_col() does not modify data, while geom_bar() makes it into a bar graph while calculating a new y-axis to make count or prop.
 
 # 3. Most geoms and stats come in pairs that are almost always used in concert. What do they have in common? 
 
@@ -369,7 +369,7 @@ ggplot(data = diamonds) +
 # 4. What variables does stat_smooth() compute? What parameters control its behaviour? 
 ?stat_smooth
 
-# stat_smooth is paired with geom_smooth and is used decluttering data on the y-axis. It is controlled by data smoothing commeands. 
+# stat_smooth is paired with geom_smooth and is used for decluttering data on the y-axis. It is controlled by data smoothing commands. 
 
 # 5. In our proportion bar chart, we need to set group = 1. Why? 
 # In other words what is the problem with these two graphs?
@@ -379,7 +379,7 @@ ggplot(data = diamonds) +
 ggplot(data = diamonds) + 
   geom_bar(mapping = aes(x = cut, fill = color, y = ..prop..))
 
-# Both of the bar graphs have all the bars at the same height, causing a major loss of data. 
+# Both of the bar graphs have all the bars at the same height, causing a major loss of data.There is no distingushing between groups. 
 
 # 3.8 Position adjustments 
 
@@ -438,6 +438,7 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
   geom_count()
 
 # geom_count is a modification of geom_point that increase dot size, but in this case does not add helpful new information. 
+# geom_jitter adds the jitter effect. 
 
 # 4. What’s the default position adjustment for geom_boxplot()? 
 # Create a visualisation of the mpg dataset that demonstrates it.
@@ -495,7 +496,7 @@ bar2 + coord_polar()
 
 # 2. What does labs() do? Read the documentation. 
 ?labs()
-# This function allows you to chage label titles. 
+# This function allows you to change label titles. 
 
 # 3. What’s the difference between coord_quickmap() and coord_map()?
 

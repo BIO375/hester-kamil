@@ -1,7 +1,22 @@
 ### Chapter 3 Data Visualization####
 
+# Clean up the working environment
+rm(list = ls())
+# Verify working directory, should be ~/Documents/Analyses/lastname_first
+getwd()
+
+### Install and load packages ####
+# The following commands will install these packages if they are not already installed, 
+# and then load them!
+
+if(!require(Rmisc)){install.packages("Rmisc")}
+if(!require(DescTools)){install.packages("DescTools")}
+if(!require(boot)){install.packages("boot")}
+if(!require(rcompanion)){install.packages("rcompanion")}
+if(!require(summarytools)){install.packages("summarytools")}
+
 # 3.1.1 Open tidyverse
-install.packages("tidyverse")
+if(!require(tidyverse)){install.packages("tidyverse")}
 library(tidyverse)
 
 # 3.2.2 Create a ggplot of mpg (US Environmental Protection Agency on 38 models of car) 
@@ -80,17 +95,34 @@ ggplot(data = mpg) +
 # 3.3.1 Exercises 
 
 # 1. What's gone wrong with this code? Why are the points not blue?
-# This code is running improperly because There is not a closed parentheses 
+
+# This code is running improperly because there is not a closed parentheses around the aes() portion of the code, making ggplot think its a varible. 
 
 # 2. Which variables in mpg are categorical? 
 # Which variables are continuous?  
 # How can you see this information when you run mpg?
 
+# Within the mpg file teh categorical variables are manufacturer, model, trans, drv, fl and class. 
+# The continuous variables are displ. cty, and hwy.
+# This information is avaliable in the columns of the the file once you view mpg.
+
 # 3. Map a continuous variable to color, size, and shape. 
 # How do these aesthetics behave differently for categorical vs. continuous variables?
 
+# Ggplot will not map a continuous variable according to color, size, and shape, only categoical variables.
+
 # 4. What happens if you map the same variable to multiple aesthetics?
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, shape = class, color = class))
+#Ggplot is able to map mulitple aesthetics over the same varible to further distingush it. 
 
 # 5. What does the stroke aesthetic do? What shapes does it work with?
 
+# The stroke aesthetic allows the user to change the width of the border around shapes on a plot. 
+
 # 6. What happens if you map an aesthetic to something other than a variable name, like aes(colour = displ < 5)
+
+# This function is not possible using ggplot because it attempts to 'apply non-function to data'. 
+
+             

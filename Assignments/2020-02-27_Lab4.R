@@ -15,6 +15,7 @@ if(!require(boot)){install.packages("boot")}
 if(!require(rcompanion)){install.packages("rcompanion")}
 if(!require(summarytools)){install.packages("summarytools")}
 if(!require(maps)){install.packages("maps")}
+if(!require(mapproj)){install.packages("mapproj")}
 
 # 3.1.1 Prerequisites
 
@@ -253,7 +254,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
   geom_smooth(se = FALSE)
 
 # I predict that this plot will look like a scatter plot of displ vs hwy with the points in three different colors to reporesent drv. 
-# There will also be a smooth layer possibly for points outside standard error. 
+# There will also be a smooth layer possibly for points outside the range of the mean. 
 # After running the code I realized that the smooth layer was to present all points in each of the three drv categories.
 
 # 3. What does show.legend = FALSE do? What happens if you remove it?
@@ -264,7 +265,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
 
 # 4. What does the se argument to geom_smooth() do?  
 
-# The se argument removes a statistic from the lines created.
+# The se argument removes a statistic calculating confidence interval from the lines created.
 
 # 5. Will these two graphs look different? Why/why not?
 ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
@@ -278,6 +279,36 @@ ggplot() +
 # The two plots are the same, the first one is using simplified code. 
 
 # 6. Recreate the R code necessary to generate the following graphs. 
+
+# Graph 1.
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+
+# Graph 2.
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth(mapping = aes(group = drv), se = FALSE)
+
+# Graph 3.
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, colour = drv)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+
+# Graph 4.
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(colour = drv)) + 
+  geom_smooth(se = FALSE)
+
+# Graph 5.
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(colour = drv)) + 
+  geom_smooth(mapping = aes(linetype = drv), se = FALSE)
+
+# Graph 6.
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(fill = drv), shape = 21, stroke = 2, colour = "white", size = 3) 
+# Looked this one up on github because wasn't sure how to make white effect. 
 
 # 3.7 Statistical transformations
 
@@ -320,14 +351,35 @@ ggplot(data = diamonds) +
 # 1. What is the default geom associated with stat_summary()? 
 # How could you rewrite the previous plot to use that geom function instead of the stat function? 
 
+# Stat_summary() is associated with geom_pointrange().
+ggplot(data = diamonds) +
+  geom_pointrange(mapping = aes(x = cut, y = depth, ymin = depth, ymax = depth))
+
 # 2. What does geom_col() do? How is it different to geom_bar()?
+
+# geom_col() does not modify data, while geom_bar() makes it into a bar graph while calculating new y-axis to make count or prop.
 
 # 3. Most geoms and stats come in pairs that are almost always used in concert. What do they have in common? 
 
+# stat_summary and geom_pointrange
+# stat_count and geom_bar
+
+# These two geom and stat pairs both code the same plots. 
+
 # 4. What variables does stat_smooth() compute? What parameters control its behaviour? 
+?stat_smooth
+
+# stat_smooth is paired with geom_smooth and is used decluttering data on the y-axis. It is controlled by data smoothing commeands. 
 
 # 5. In our proportion bar chart, we need to set group = 1. Why? 
 # In other words what is the problem with these two graphs?
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = ..prop..))
+
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = color, y = ..prop..))
+
+# Both of the bar graphs have all the bars at the same height, causing a major loss of data. 
 
 # 3.8 Position adjustments 
 
@@ -363,13 +415,35 @@ ggplot(data = mpg) +
 
 ### 3.8.1 Exercises ####
 
-# 1.
+# 1.What is the problem with this plot? How could you improve it?
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point()
 
-# 2. 
+# Both these variables are continuous so we should add jitter to represent that. 
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point(position = "jitter")
 
-# 3.
+# 2. What parameters to geom_jitter() control the amount of jittering?
+?geom_jitter
 
-# 4.
+# Width controls vertical and horizontal jitter amount, height does the same. 
+
+# 3. Compare and contrast geom_jitter() with geom_count().
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point() +
+  geom_jitter()
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point() +
+  geom_count()
+
+# geom_count is a modification of geom_point that increase dot size, but in this case does not add helpful new information. 
+
+# 4. What’s the default position adjustment for geom_boxplot()? 
+# Create a visualisation of the mpg dataset that demonstrates it.
+
+ggplot(data = mpg, mapping = aes(x = class, y = displ)) + 
+  geom_boxplot()
 
 # 3.9 Coordinate systems
 
@@ -406,13 +480,40 @@ bar + coord_polar()
 
 ### 3.9.1 Exercises ####
 
-# 1.
+# 1. Turn a stacked bar chart into a pie chart using coord_polar().
+bar2 <- ggplot(data = diamonds) +
+  geom_bar(
+    mapping = aes(x = cut, fill = cut),
+    show.legend = FALSE,
+    width = 1
+  ) +
+  theme(aspect.ratio = 1) +
+  labs(x = NULL, y = NULL)
 
-# 2. 
+bar2 + coord_polar()
 
-# 3. 
 
-# 4. 
+# 2. What does labs() do? Read the documentation. 
+?labs()
+# This function allows you to chage label titles. 
+
+# 3. What’s the difference between coord_quickmap() and coord_map()?
+
+# coord_quickmap() and coord_map() essentially do the same thing, but coord_quickmap() has lines to represent the earths cruvature. 
+
+# 4. What does the plot below tell you about the relationship between city and highway mpg? 
+# Why is coord_fixed() important? What does geom_abline() do?
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_point() + 
+  geom_abline() +
+  coord_fixed()
+
+?geom_abline
+?coord_fixed
+
+# The plot tells us there is a positive correlation between highway miles per gallon vs city miles per gallon. 
+# geom_abline () adds refernce lines to plots
+# coord_fixed() changes the aspect ratio, makes x and y axis equal. 
 
 # 3.10 The layered grammar of graphics
 

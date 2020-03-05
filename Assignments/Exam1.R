@@ -75,3 +75,4 @@ Crickets<-mutate(Crickets, log_timeToMating = log(timeToMating+1))
 ggplot(Crickets) +
   geom_histogram(aes(log_timeToMating), binwidth = .4)+
   facet_wrap(~feedingStatus)
+

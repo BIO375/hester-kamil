@@ -220,7 +220,7 @@ ggplot(untidy_blackbird)+
 # In my humble opinion, log-transforming the data does not change much, possibly some small improvement in
 # the histogram's symmetry.
 
-### Incomplete ####
+### Incomplete (working through the lab) ####
 
 # There are (at least) two methods for paired t-tests.  The first is a one sample t-test on the differences, 
 # using the function pt().  I am not bothering to show you that here.

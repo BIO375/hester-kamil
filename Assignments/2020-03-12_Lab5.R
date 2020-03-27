@@ -21,13 +21,10 @@ library(tidyverse)
 
 # Check for updates
 tidyverse_update()
-install.packages(c("broom", "dplyr", "forcats", "ggplot2", "modelr", "rlang", 
-                   "xml2"))
 
 ### Confidence Interval of the mean ####
 
-# To show an example of code for a confidence interval (similar to swirl bless its heart), I will use the
-# calcium that was one of your in class problems.
+# To show an example of code for a confidence interval (calcium example from class)
 
 coelomic <- tribble(
   ~calcium,
@@ -46,7 +43,7 @@ coelomic <- tribble(
   31
 )
 
-# In swirl or certain problems, you will be given the mean, standard deviation and sample size.  Here I 
+# For certain problems, you will be given the mean, standard deviation and sample size.  Here I 
 # calculate them directly and name them, mean <- mean(coelomic$calcium), but you can also just type in 
 # the number, mean <- 29.76923.
 data <- coelomic
@@ -56,6 +53,7 @@ summary <- coelomic %>%
             n = n(),
             se = sd(calcium)/sqrt(n()))
 
+# Import these values manually for confidence interval
 alpha <- 0.05
 mean <- summary$mean
 se <- summary$se
@@ -70,7 +68,7 @@ df <- summary$n -1
 
 # NOTE that in the swirl text it refers to the critical value of t as t_(n-1)
 
-# If you used summarise to calculate the descriptive statistics, then the code is
+# If summarise was usedto calculate the descriptive statistics, then the code is to calculate confidence interval
 mean + c(-1,1)*qt(1-alpha, df )*se
 
 # mean <- 29.76923	
@@ -80,22 +78,24 @@ mean + c(-1,1)*qt(1-alpha, df )*se
 # df <- n-1
 # alpha = 0.05
 
+# mean + c(-1,1)*qt(1-alpha, df)*se
+
 ### One sample t-test ####
 
 # Option A: Have t-sample and p-value calculated by equation
+# The function pt() calculates the probability of t less than or equal to a sample value. (Opposite t-table)
 
-# Calculate t_sample.  You will need to define what the sample mean, null hypothesis mean, sample 
+# Calculate t_sample.  Define what the sample mean, null hypothesis mean, sample 
 # standard deviation, and sample size are.  
 
-# If you are given the values for the sample mean, sd, and n, you can simply define each value as an object 
-# in the environment
+# If given the values for the sample mean, sd, and n, you can define each value as an object in the environment
 sample_mean <- 39.3
 sample_sd <- 30.7
 sample_n <- 31
 df <- sample_n -1
 
-# If you are given raw data, read in the data file and define each summary statistic with a simple equation
-# Note: you can't use summarise here because it will create a table instead of named objects.
+# If given raw data, read in the data file and define each summary statistic with a simple equation
+# Note: Don't use summarise here because it will create a table instead of named objects.
 
 # Read in data from Question 1 in Chapter 11 of your book
 range_shift <- read_csv("datasets/abd/chapter11/chap11q01RangeShiftsWithClimateChange.csv")
@@ -104,13 +104,13 @@ range_shift <- read_csv("datasets/abd/chapter11/chap11q01RangeShiftsWithClimateC
 # Provides y values
 y<-range_shift$elevationalRangeShift
 
-# Calculate summary statistics (Don't use summarise because will make a table)
+# Calculate summary statistics (Don't use summarise because will make a table, input into environment)
 sample_mean <-mean(y)
 sample_sd <- sd(y)
 sample_n <- as.numeric(length(y))
 df <- sample_n -1
 
-# Specify your null mean, the certain value specified by the null hypothesis (Typically 0)
+# Specify your null mean, the certain value specified by the null hypothesis (Typically 0 for no change)
 null_mean <- 0
 
 # Whether you are given the values for mean/sd/n or calculate them, your next step is calculating t_sample
@@ -191,9 +191,9 @@ ggplot(untidy_blackbird)+
 # mean and median are close).
 # You could also justify transforming ("Histogram shows weak left skew and in the boxplot, the lower whisker is
 #   longer than upper whisker and the mean is slightly less than median (again indicating weak left skew))
-# What is important to me, is that you justify your choice. (Important distinction)
+# What is important, is that you justify your choice. (Important distinction)
 
-# Because it is instructive, I am going to do a transformation and re-evaluate. Happily, there are already log-transformed
+# Do a transformation and re-evaluate. Happily, there are already log-transformed
 # data in the dataset, so I just calculate diff_logs
 untidy_blackbird <- untidy_blackbird %>%
   mutate(diff_logs = logAfterImplant - logBeforeImplant)
@@ -217,14 +217,12 @@ ggplot(untidy_blackbird) +
 ggplot(untidy_blackbird)+
   geom_qq(aes(sample = diff))
 
-# In my humble opinion, log-transforming the data does not change much, possibly some small improvement in
+# In professor opinion, log-transforming the data does not change much, possibly some small improvement in
 # the histogram's symmetry.
 
-### Incomplete (working through the lab) ####
-
-# There are (at least) two methods for paired t-tests.  The first is a one sample t-test on the differences, 
-# using the function pt().  I am not bothering to show you that here.
-# The second uses the function t.test().  Unlike using t.test() for a one sample t-test, a two sample t-test
+# There are (at least) two methods for paired t-tests.  
+# Option 1: is a one sample t-test on the differences, using the function pt().(Not shown)
+# Option 2: uses the function t.test().  Unlike using t.test() for a one sample t-test, a two sample t-test
 # specifies each group (i.e., before and after), does not take the argument mu = , and takes the argument 
 # paired = TRUE.
 # Note that the confidence intervals are for the mean difference.
@@ -259,7 +257,7 @@ ggplot(tidy_blackbird, aes(x=treatment, y=antibody, group=blackbird)) +
   scale_colour_manual(values=c("#009E73", "#D55E00"), guide=FALSE) + 
   theme_bw()
 
-### Non-parametric Sign Test #########################
+### Non-parametric Sign Test ####
 
 # Although not necessary, it is instructive to perform a sign test on the elevational range shift data.
 
@@ -292,12 +290,14 @@ SignTest(untidy_blackbird$diff, alternative = "less", mu = 0, conf.level = 0.95)
 # when performing the Sign Test.
 
 
-# The below code is just to generat figures in the lab handout.  # These data come from example 13.4 in your book.
+# The below code is just to generate figures in the lab handout.  # data from example 13.4 in your book.
 conflict <- read_csv("datasets/abd/chapter13/chap13e4SexualConflict.csv")
 
+# Generate histogram
 ggplot(conflict) +
   geom_histogram(aes(difference), binwidth = 30)
 
+# Generate boxplot
 ggplot(conflict) +
   geom_boxplot(aes(x = "", y = difference))+
   stat_summary(aes(x = "", y = difference), 
@@ -308,11 +308,12 @@ ggplot(conflict) +
                shape=21, 
                size=3)
 
+# Generate q-q plot
 ggplot(conflict)+
   geom_qq(aes(sample = difference))
 
 
-### Two sample t-test #########################
+### Two sample t-test ####
 
 # Pooled variances
 # Read in the Ward & Quinn dataset looking at the egg production of predatory snails
@@ -325,14 +326,15 @@ summ_eggs <- ward %>%
             sd_eggs = sd(EGGS),
             n_eggs = n())
 
-# Calculate the ratio between the standard deviations as a loose test of homoscedasticity
+# Calculate the ratio between the standard deviations as a loose test of homoscedasticity (how normally distributed is the data noise)
 ratio <-(max(summ_eggs$sd_eggs))/(min(summ_eggs$sd_eggs))
 
-# Look at histograms, box plots, q-q plots
+# Look at histogram
 ggplot(ward) +
   geom_histogram(aes(EGGS), binwidth = 2)+
   facet_wrap(~ZONE)
 
+# Generate box plot
 ggplot(ward) +
   geom_boxplot(aes(x = ZONE, y = EGGS))+
   stat_summary(aes(x = ZONE, y = EGGS), 
@@ -343,10 +345,11 @@ ggplot(ward) +
                shape=21, 
                size=3)
 
+# Generate q-q plot
 ggplot(ward)+
   geom_qq(aes(sample = EGGS, color = ZONE))
 
-# A little right skew indicated in both histograms, with a longer tail in the Mussel group.  The boxplots
+# Anaylsis: A little right skew indicated in both histograms, with a longer tail in the Mussel group.  The boxplots
 # also indicate some right skew in the Mussel group: there is a high outlier, the upper whisker is longer than 
 # the lower whisker, and the mean is larger than the median.  However the sample sizes are quite large (n =37
 # and n = 42) and so a parametric test is still OK.
@@ -365,7 +368,7 @@ t.test(EGGS ~ ZONE, data = ward, var.equal = TRUE, alternative = "greater", conf
 # One-sided, HA that Littor - Mussel is less than zero
 t.test(EGGS ~ ZONE, data = ward, var.equal = TRUE, alternative = "less", conf.level = 0.95)
 
-## Welch's t-test #########################
+## Welch's t-test ####
 
 # Read in the Levin et al dataset from example 12.4 from your book.  
 salmon <- read_csv("datasets/abd/chapter12/chap12e4ChinookWithBrookTrout.csv")
@@ -389,6 +392,7 @@ ggplot(salmon) +
   geom_histogram(aes(proportionSurvived), binwidth = 0.05)+
   facet_wrap(~troutTreatment)
 
+# Generate boxplot
 ggplot(salmon) +
   geom_boxplot(aes(x = troutTreatment, y = proportionSurvived))+
   stat_summary(aes(x = troutTreatment, y = proportionSurvived), 
@@ -399,6 +403,7 @@ ggplot(salmon) +
                shape=21, 
                size=3)
 
+# Generate q-q plot
 ggplot(salmon)+
   geom_qq(aes(sample = proportionSurvived, color = troutTreatment))
 
@@ -415,15 +420,17 @@ t.test(proportionSurvived ~ troutTreatment, data = salmon, alternative = "greate
 # One-sided, HA that absent is less than present
 t.test(proportionSurvived ~ troutTreatment, data = salmon, alternative = "less", conf.level = 0.95)
 
-### Non-parametric Mann-Whitney U or Wilcoxon Test #########################
+### Non-parametric Mann-Whitney U or Wilcoxon Test ####
 
 # For this we are going to return to the cannibal crickets from Exam 1 Extra Credit
 cricket <- read_csv("datasets/abd/chapter13/chap13e5SagebrushCrickets.csv")
 
+# Generate histogram
 ggplot(cricket) +
   geom_histogram(aes(timeToMating), binwidth = 10)+
   facet_wrap(~feedingStatus)
 
+# Generate boxplot
 ggplot(cricket) +
   geom_boxplot(aes(x = feedingStatus, y = timeToMating))+
   stat_summary(aes(x = feedingStatus, y = timeToMating), 
@@ -434,6 +441,7 @@ ggplot(cricket) +
                shape=21, 
                size=3)
 
+# Generate q-q plot
 ggplot(cricket)+
   geom_qq(aes(sample = timeToMating, color = feedingStatus))
 
@@ -450,3 +458,7 @@ wilcox.test(timeToMating ~ feedingStatus, data = cricket, alternative = "greater
 
 # One-sided, HA that fed less than starved
 wilcox.test(timeToMating ~ feedingStatus, data = cricket, alternative = "less", conf.level = 0.95)
+
+### Question 1####
+
+

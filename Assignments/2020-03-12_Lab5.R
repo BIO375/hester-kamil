@@ -461,4 +461,60 @@ wilcox.test(timeToMating ~ feedingStatus, data = cricket, alternative = "less", 
 
 ### Question 1####
 
+# Read .csv file of historical accounts
+Obliquity <- read_csv("datasets/Earth's spin.csv")
 
+# 1-1. What is your (astronomical) hypothesis of interest?
+# The angle of obliquity measured in 1738 was different from the angles measured in the past
+
+# 1-2. What is the null hypothesis?
+# The angle of obliquity measured in 1738 was the same as the the angles measured in the past
+
+# 1-3. Use R to perform a one-sample t-test
+
+# Identify your response variable using the form dataset$variable_name
+x<-Obliquity$Obliquity
+
+# Calculate summary statistics (Don't use summarise because will make a table, input into environment)
+sample_Omean <-mean(x)
+sample_Osd <- sd(x)
+sample_On <- as.numeric(length(x))
+df <- sample_n -1
+
+# Specify your null mean, the certain value specified by the null hypothesis (Typically 0 for no change)
+null_mean <- 0
+
+# Whether you are given the values for mean/sd/n or calculate them, your next step is calculating t_sample
+t_Osample <- (sample_Omean - null_mean)/(sample_Osd/sqrt(sample_On))
+
+# For a two-sided test, the exact probability of obtaining t equal to t_sample or more extreme is calculated
+# as:
+two_tailed <- 2*(1-pt(abs(t_sample), df))
+
+# Two-sided
+t.test(Obliquity$Obliquity, 
+       alternative = "two.sided", mu = 0, conf.level = 0.95)
+
+# We found the obliquity measured in Paris in 1738 was different from the angles measured in the past when compared with earlier measurements
+# (one-sample t-test: t= 2679.1; df= 4; p=1.165)
+
+### Question 2####
+
+# Read the heart attack file 
+Heart_Attack <- read_csv("datasets/demos/HeartAttack_short.csv")
+
+# 2-1. 
+# The statistical alternate hypothesis (Ha): 
+# The cholesterol level measured in heart-attack patients 2 days post heart attack was greater than individuals who have not had a heart attack.
+
+# The statistical null hypothesis (Ho):
+# The cholesterol level measured in heart-attack patients 2 days post heart attack was less than or equal to individuals who have not had a heart attack.
+
+# 2-2. For the null hypothesis test of interest, what are the Degrees of Freedom?
+# The degrees of freedom of group 1 is 27 and of group 2 is 29.
+
+# 2-4. 
+# Is there any evidence that the assumption of normality has been violated? Be specific. 
+
+
+# What is the ratio smax/smin? Round your answer to 2 decimal places. 

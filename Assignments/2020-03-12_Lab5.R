@@ -465,10 +465,10 @@ wilcox.test(timeToMating ~ feedingStatus, data = cricket, alternative = "less", 
 Obliquity <- read_csv("datasets/Earth's spin.csv")
 
 # 1-1. What is your (astronomical) hypothesis of interest?
-# The angle of obliquity measured in 1738 was different from the angles measured in the past
+# The angle of obliquity measured in 1738 was statistically different from the angles measured in the past
 
 # 1-2. What is the null hypothesis?
-# The angle of obliquity measured in 1738 was the same as the the angles measured in the past
+# The angle of obliquity measured in 1738 was not indepdendent of the angles measured in the past
 
 # 1-3. Use R to perform a one-sample t-test
 
@@ -479,7 +479,7 @@ x<-Obliquity$Obliquity
 sample_Omean <-mean(x)
 sample_Osd <- sd(x)
 sample_On <- as.numeric(length(x))
-df <- sample_n -1
+df <- sample_On-1
 
 # Specify your null mean, the certain value specified by the null hypothesis (Typically 0 for no change)
 null_mean <- 0
@@ -492,11 +492,10 @@ t_Osample <- (sample_Omean - null_mean)/(sample_Osd/sqrt(sample_On))
 two_tailed <- 2*(1-pt(abs(t_sample), df))
 
 # Two-sided
-t.test(Obliquity$Obliquity, 
-       alternative = "two.sided", mu = 0, conf.level = 0.95)
+t.test(Obliquity$Obliquity, alternative = "two.sided", mu = 0, conf.level = 0.95)
 
 # We found the obliquity measured in Paris in 1738 was different from the angles measured in the past when compared with earlier measurements
-# (one-sample t-test: t= 2679.1; df= 4; p=1.165)
+# (two-sided one-sample t-test: t= 2679.1; df= 4; p=1.173-13)
 
 ### Question 2####
 
@@ -505,7 +504,7 @@ Heart_Attack <- read_csv("datasets/demos/HeartAttack_short.csv", col_types = col
 
 # 2-1. 
 # The statistical alternate hypothesis (Ha): 
-# The cholesterol level measured in heart-attack patients 2 days post heart attack was greater than individuals who have not had a heart attack.
+# The cholesterol level measured in heart-attack patients 2 days post heart attack was greater than in individuals who have not had a heart attack.
 
 # The statistical null hypothesis (Ho):
 # The cholesterol level measured in heart-attack patients 2 days post heart attack was less than or equal to individuals who have not had a heart attack.
@@ -544,13 +543,13 @@ ggplot(Heart_Attack) +
 ggplot(Heart_Attack)+
   geom_qq(aes(sample = cholest, color = group))
 
-# Anaylsis: Group 1 histogram appears to be from a normal distribution, while group 2 is a little right skew   
+# Anaylsis: Group 1 histogram appears to have a normal distribution, while group 2 is a little right skew   
 # The boxplots also indicate some right skew in group 2 there is a high outlier, the upper whisker is longer than 
 # the lower whisker, and the mean is slightly larger than the median. For group 1 the mean is smaller than the median,
 # indication of weak left skew. The medians are not located int the center of the IQR box.
 # Q-Q plot: the extreme points do not lay in a line with sample sizes that are large (n =28 and n = 30).
 # However there is not enough evidence that the assumption of normality had been violated to prevent the parametric test from being done.
-# the ratio of variance is less than 3 suggesting a student t-test rather than Welch's t-test should be conducte.
+# the ratio of variance is less than 3 suggesting a student t-test rather than Welch's t-test should be conducted.
 
 
 # What is the ratio smax/smin? Round your answer to 2 decimal places. 
@@ -565,7 +564,7 @@ t.test(cholest ~ group, data = Heart_Attack, var.equal = TRUE, alternative = "gr
 
 # We found that blood cholesterol in heart attack patients 2 days post heart attack was greater than
 # blood cholesterol in individuals who have not had a heart attack
-# (two-sample t-test: t= 6.29; df= 56; p = 2.6e-08)
+# (one-side two-sample t-test: t= 6.29; df= 56; p = 2.6e-08)
 
 ### Question 3####
 
@@ -574,7 +573,7 @@ Fulmars <- read_csv("datasets/quinn/chpt3/furness.csv")
 
 # 3-1. What are your options if the assumption of normality are not met? When do you use each option?
 # My options if the assumptions of normality are not met are to use a nonparametric tests, such as the Mann-Whitney U or Wilcoxon.
-# Wilcoxon test is used when the distrubtion measurements of a population is symmetical.
+# Wilcoxon test is used when the distrubtion measurements of a population are symmetical.
 # Mann-Whitney U is used when the distribution of the two groups being compared is the same shape. 
 
 # 3-2. What null hypothesis does this test actually evaluate? How is that different from a standard two-sample t-test?
@@ -609,10 +608,10 @@ ggplot(Fulmars)+
   geom_qq(aes(sample = METRATE, color = SEX))
 
 # Anaylsis: Male Fulmars have a symmetrical distribution within its histogram, while female Fulmars have a weak right skew.
-# Boxplots: For the male boxplot mean = median, while for the female boxplot the mean is higher than the median indicating skew. 
+# Boxplots: For the male boxplot mean = median, while for the female boxplot the mean is higher than the median indicating the right skew. 
 # Both have larger upper whiskers than lower whiskers though
 # The q-q plot this less revelant because n1 and n2 are small, but there is a good amount of outlier points for the male sex
-
+# This data does not adhear to the assumptions of either test.
 
 # 3-4. Preform Wilcoxon test
 

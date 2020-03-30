@@ -501,7 +501,7 @@ t.test(Obliquity$Obliquity,
 ### Question 2####
 
 # Read the heart attack file 
-Heart_Attack <- read_csv("datasets/demos/HeartAttack_short.csv")
+Heart_Attack <- read_csv("datasets/demos/HeartAttack_short.csv", col_types = cols(group = col_character()))
 
 # 2-1. 
 # The statistical alternate hypothesis (Ha): 
@@ -513,8 +513,191 @@ Heart_Attack <- read_csv("datasets/demos/HeartAttack_short.csv")
 # 2-2. For the null hypothesis test of interest, what are the Degrees of Freedom?
 # The degrees of freedom of group 1 is 27 and of group 2 is 29.
 
-# 2-4. 
-# Is there any evidence that the assumption of normality has been violated? Be specific. 
+# 2-4. Is there any evidence that the assumption of normality has been violated? Be specific. 
+# Must check is the observations are from normally distributed population.
+
+# We must check the two observations variance for homoscedasticity (how normally distributed is the data noise)
+summ_Attack <- Heart_Attack %>%
+  group_by(group) %>% 
+  summarise(mean_attack = mean(cholest),
+            sd_attack = sd(cholest),
+            var_attack = var(cholest),
+            n_attack = n())
+
+# Generate histogram
+ggplot(Heart_Attack) +
+  geom_histogram(aes(cholest), binwidth = 15)+
+  facet_wrap(~group)
+
+# Generate box plot
+ggplot(Heart_Attack) +
+  geom_boxplot(aes(x = group, y = cholest))+
+  stat_summary(aes(x = group, y = cholest), 
+               fun=mean, 
+               colour="blue", 
+               fill = "blue",
+               geom="point", 
+               shape=21, 
+               size=3)
+
+# Generate q-q plot
+ggplot(Heart_Attack)+
+  geom_qq(aes(sample = cholest, color = group))
+
+# Anaylsis: Group 1 histogram appears to be from a normal distribution, while group 2 is a little right skew   
+# The boxplots also indicate some right skew in group 2 there is a high outlier, the upper whisker is longer than 
+# the lower whisker, and the mean is slightly larger than the median. For group 1 the mean is smaller than the median,
+# indication of weak left skew. The medians are not located int the center of the IQR box.
+# Q-Q plot: the extreme points do not lay in a line with sample sizes that are large (n =28 and n = 30).
+# However there is not enough evidence that the assumption of normality had been violated to prevent the parametric test from being done.
+# the ratio of variance is less than 3 suggesting a student t-test rather than Welch's t-test should be conducte.
 
 
 # What is the ratio smax/smin? Round your answer to 2 decimal places. 
+# Calculate the ratio between the standard deviations as a loose test of homoscedasticity 
+ratio2 <-(max(summ_Attack$sd_attack))/(min(summ_Attack$sd_attack))
+# 2.14, ratio is less than 3 
+
+# 2-5. Preform a two sample t-test or Welch's separate variance t-test
+
+# One-sided, HA that group 1 is greater than group 2
+t.test(cholest ~ group, data = Heart_Attack, var.equal = TRUE, alternative = "greater", conf.level = 0.95)
+
+# We found that blood cholesterol in heart attack patients 2 days post heart attack was greater than
+# blood cholesterol in individuals who have not had a heart attack
+# (two-sample t-test: t= 6.29; df= 56; p = 2.6e-08)
+
+### Question 3####
+
+# Read Furness & Bryant (1996) file
+Fulmars <- read_csv("datasets/quinn/chpt3/furness.csv")
+
+# 3-1. What are your options if the assumption of normality are not met? When do you use each option?
+# My options if the assumptions of normality are not met are to use a nonparametric tests, such as the Mann-Whitney U or Wilcoxon.
+# Wilcoxon test is used when the distrubtion measurements of a population is symmetical.
+# Mann-Whitney U is used when the distribution of the two groups being compared is the same shape. 
+
+# 3-2. What null hypothesis does this test actually evaluate? How is that different from a standard two-sample t-test?
+# The Mann-Whitney U test evaluates the null hypothesis that the two groups being compared have the same distrbution.
+# This is different from a two-sample t-test in that rejecting H0 it doesn't convey information on if the mean is 
+# larger or smaller in one group compared to the other. Mann-Whitney U focuses on overall distribution not location information like mean and median. 
+
+# 3-3. What are the underlying assumptions of a Mann-Whitney U (or Wilcoxon) test? 
+# Why might this not be a great test for this particular dataset?
+# Wilcoxon test assmues when the distrubtion measurements of a population is symmetical.
+# Mann-Whitney U assumes when the distribution of the two groups being compared is the same shape. 
+# This assumptions are not great for this particular dataset because if we look at histograms, boxplots and q-q plots of the data:
+
+# histogram
+ggplot(Fulmars) +
+  geom_histogram(aes(METRATE), binwidth = 12)+
+  facet_wrap(~SEX)
+
+# boxplot
+ggplot(Fulmars) +
+  geom_boxplot(aes(x = SEX, y = METRATE))+
+  stat_summary(aes(x = SEX, y = METRATE), 
+               fun=mean, 
+               colour="blue", 
+               fill = "blue",
+               geom="point", 
+               shape=21, 
+               size=3)
+
+# q-q plot
+ggplot(Fulmars)+
+  geom_qq(aes(sample = METRATE, color = SEX))
+
+# Anaylsis: Male Fulmars have a symmetrical distribution within its histogram, while female Fulmars have a weak right skew.
+# Boxplots: For the male boxplot mean = median, while for the female boxplot the mean is higher than the median indicating skew. 
+# Both have larger upper whiskers than lower whiskers though
+# The q-q plot this less revelant because n1 and n2 are small, but there is a good amount of outlier points for the male sex
+
+
+# 3-4. Preform Wilcoxon test
+
+# Two-sided
+wilcox.test(METRATE ~ SEX, data = Fulmars, alternative = "two.sided", conf.level = 0.95)
+
+# We found that body mass of male fulmar was not statisially different from body mass of female fulmars 
+# (Wilcoxon rank sums test: W= 21; P= 0.75).
+
+### Question 4####
+
+# Read Elgar et al. (1996) file
+
+Spiders <- read_csv("datasets/quinn/chpt3/elgar.csv")
+
+# 4-1. What is an appropriate statistical test for testing a hypothesis about the difference in horizontal diameter
+# of webs spun in light versus dark conditions? Explain why. 
+
+# An appropiate statistical test for testing a hypothesis about the difference in horizontal diameter of webs spun in
+# light versus dark conditiond is a two sample t-test because the purpose of the test is to compare means of two 
+# groups/conditions.
+
+# 4-2. What is the null hypothesis?
+# H0: The horizontal diameter of an orb-spinning spider's web in light conditions is not different from horizontal diameter in dark conditions. 
+
+# 4-3. Do these data meet the assumptions of a standard two sample test? Why not?
+# This data meets the assumptions of a standard two sample test because the observations are randomized.
+# Calculate the ratio between the standard deviations as a loose test of homoscedasticity 
+summ_SpiderLit <- Spiders %>%
+  summarise(mean_Spider = mean(HORIZLIG),
+            sd_Spider = sd(HORIZLIG),
+            var_Spider = var(HORIZLIG))
+
+summ_SpiderDim <- Spiders %>%
+  summarise(mean_Spider = mean(HORIZDIM),
+            sd_Spider = sd(HORIZDIM),
+            var_Spider = var(HORIZDIM))
+
+ratio3 <-(max(summ_SpiderLit$sd_Spider))/(min(summ_SpiderDim$sd_Spider))
+# 1.08, ratio is less than 3 
+
+# 4-4. Reform statistical test.
+
+Simplified_Spider <- tribble(
+  ~Lighting,   ~Data,
+  "Lit",         60,
+  "Lit",         140,
+  "Lit",         160,
+  "Lit",         120,
+  "Lit",         180,
+  "Lit",         90,
+  "Lit",         120,
+  "Lit",         220,
+  "Lit",         210,
+  "Lit",         150,
+  "Lit",         160,
+  "Lit",         330,
+  "Lit",         100,
+  "Lit",         240,
+  "Lit",         190,
+  "Lit",         170,
+  "Lit",         100,
+  "Dim",         295,
+  "Dim",         260,
+  "Dim",         280,
+  "Dim",         250,
+  "Dim",         160,
+  "Dim",         150,
+  "Dim",         290,
+  "Dim",         120,
+  "Dim",         210,
+  "Dim",         120,
+  "Dim",         240,
+  "Dim",         270,
+  "Dim",         150,
+  "Dim",         210,
+  "Dim",         200,
+  "Dim",         160,
+  "Dim",         160
+)
+
+
+# Two-sided
+t.test(Data ~ Lighting, data = Simplified_Spider, var.equal = TRUE, alternative = "two.sided", conf.level = 0.95)
+
+# We found that horizontal diameter of an orb-spinning spider's web in light conditions was statistically different
+# from the horizontal diameter in dark conditions
+# (Two-sided two-sample t-test; t= -2.14; df= 32; P=0.04).

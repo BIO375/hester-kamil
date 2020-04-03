@@ -621,7 +621,7 @@ wilcox.test(METRATE ~ SEX, data = Fulmars, alternative = "two.sided", conf.level
 # We found that body mass of male fulmar was not statisially different from body mass of female fulmars 
 # (Wilcoxon rank sums test: W= 21; P= 0.75).
 
-### Question 4####
+### Question 4 ####
 
 # Read Elgar et al. (1996) file
 

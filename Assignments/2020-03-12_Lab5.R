@@ -473,7 +473,7 @@ Obliquity <- read_csv("datasets/Earth's spin.csv")
 # 1-3. Use R to perform a one-sample t-test
 
 # Identify your response variable using the form dataset$variable_name
-x<-Obliquity$Obliquity
+x<-data$Obliquity
 
 # Calculate summary statistics (Don't use summarise because will make a table, input into environment)
 sample_Omean <-mean(x)
@@ -482,7 +482,7 @@ sample_On <- as.numeric(length(x))
 df <- sample_On-1
 
 # Specify your null mean, the certain value specified by the null hypothesis (Typically 0 for no change)
-null_mean <- 0
+null_mean <- 23.4722
 
 # Whether you are given the values for mean/sd/n or calculate them, your next step is calculating t_sample
 t_Osample <- (sample_Omean - null_mean)/(sample_Osd/sqrt(sample_On))
@@ -492,10 +492,10 @@ t_Osample <- (sample_Omean - null_mean)/(sample_Osd/sqrt(sample_On))
 two_tailed <- 2*(1-pt(abs(t_sample), df))
 
 # Two-sided
-t.test(Obliquity$Obliquity, alternative = "two.sided", mu = 0, conf.level = 0.95)
+t.test(Obliquity$Obliquity, alternative = "two.sided", mu = 23.4722, conf.level = 0.95)
 
 # We found the obliquity measured in Paris in 1738 was different from the angles measured in the past when compared with earlier measurements
-# (two-sided one-sample t-test: t= 2679.1; df= 4; p=1.173-13)
+# (two-sided one-sample t-test: t= 2679.1; df= 4; p=1.173e-13)
 
 ### Question 2####
 
@@ -504,10 +504,10 @@ Heart_Attack <- read_csv("datasets/demos/HeartAttack_short.csv", col_types = col
 
 # 2-1. 
 # The statistical alternate hypothesis (Ha): 
-# The cholesterol level measured in heart-attack patients 2 days post heart attack was greater than in individuals who have not had a heart attack.
+# The cholesterol level measured in heart-attack patients 2 days post heart attack different from individuals who have not had a heart attack.
 
 # The statistical null hypothesis (Ho):
-# The cholesterol level measured in heart-attack patients 2 days post heart attack was less than or equal to individuals who have not had a heart attack.
+# The cholesterol level measured in heart-attack patients 2 days post heart attack was equal to individuals who have not had a heart attack.
 
 # 2-2. For the null hypothesis test of interest, what are the Degrees of Freedom?
 # The degrees of freedom of group 1 is 27 and of group 2 is 29.

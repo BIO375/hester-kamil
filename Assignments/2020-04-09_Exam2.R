@@ -9,12 +9,12 @@ getwd()
 # The following commands will install these packages if they are not already installed, 
 # and then load them!
 
-if(!require(Rtools)){install.packages("Rtools")}
-if(!require(Rmisc)){install.packages("Rmisc")}
+# if(!require(Rtools)){install.packages("Rtools")}
+# if(!require(Rmisc)){install.packages("Rmisc")}
 if(!require(DescTools)){install.packages("DescTools")}
-if(!require(boot)){install.packages("boot")}
-if(!require(rcompanion)){install.packages("rcompanion")}
-if(!require(summarytools)){install.packages("summarytools")}
+# if(!require(boot)){install.packages("boot")}
+# if(!require(rcompanion)){install.packages("rcompanion")}
+# if(!require(summarytools)){install.packages("summarytools")}
 
 # Open tidyverse
 if(!require(tidyverse)){install.packages("tidyverse")}

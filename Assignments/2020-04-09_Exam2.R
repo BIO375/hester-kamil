@@ -33,7 +33,7 @@ Bakers <- read_csv("datasets/demos/baker.csv")
 
 # 1. Identify the variable or variables. For example,the variables in the diatom experiment are: response = diversity,
 # predictor = zinc level.
-# Reponse = Numerical, continous: streptococcus antibody concentrations
+# Response = Numerical, continuous: streptococcus antibody concentrations
 # Predictor = categorical: vaccination status. (before or after vaccination)
 
 # 2. What is the statistical null hypothesis?  If you cannot find the μ symbol, you can just write mu.
@@ -147,7 +147,7 @@ algae <- AlgaeCO2
 # 2. What is the statistical null hypothesis?  If you cannot find the μ symbol, you can just write mu.
 
 # H0: The mean algae growth rate within the high CO2 environment is the same as the 
-# mean algae growth rate within the normal CO2 enviornment.  
+# mean algae growth rate within the normal CO2 environment.  
 
 # 3. What is the default appropriate statistical test (if all assumptions were met)?
 
@@ -158,7 +158,7 @@ algae <- AlgaeCO2
 
 # The assumptions of a two sample t-test are:
 # 1. Experimental units are randomly sampled from population and independent. 
-# 2. The observations are normally distrubted. 
+# 2. The observations are normally distributed. 
 # 3. The two groups have homoscedasticity.
 
 # Look at the summary statistics
@@ -205,4 +205,4 @@ ggplot(algae)+
 t.test(growthrate ~ treatment, data = algae, var.equal = TRUE, alternative = "two.sided", conf.level = 0.95)
 
 # The mean algae growth rate within the high CO2 environment is not statistically different from the mean algae growth rate 
-# within the normal CO2 enviornment. (Two-sided two sample t-test: t= -0.53606, df= 12, P= 0.6017)  
+# within the normal CO2 environment. (Two-sided two sample t-test: t= -0.53606, df= 12, P= 0.6017)  

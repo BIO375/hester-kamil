@@ -206,3 +206,6 @@ t.test(growthrate ~ treatment, data = algae, var.equal = TRUE, alternative = "tw
 
 # The mean algae growth rate within the high CO2 environment is not statistically different from the mean algae growth rate 
 # within the normal CO2 environment. (Two-sided two sample t-test: t= -0.53606, df= 12, P= 0.6017)  
+
+
+#### Code runs without breaking 10/10 ####

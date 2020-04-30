@@ -700,3 +700,5 @@ t.test(Data ~ Lighting, data = Simplified_Spider, var.equal = TRUE, alternative 
 # We found that horizontal diameter of an orb-spinning spider's web in light conditions was statistically different
 # from the horizontal diameter in dark conditions
 # (Two-sided two-sample t-test; t= -2.14; df= 32; P=0.04).
+
+### 10/10 Code runs without breaking ####

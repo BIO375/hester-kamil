@@ -18,10 +18,33 @@ library("nlme")
 # Load tidyverse
 library("tidyverse")
 
-### Full Analysis ####
+#### Problem 15-23 ####
+# Complete parts a and c only
+
+# Read in Edelaar and Benkman 2006 file
+PineCones <- read_csv("datasets/abd/chapter15/chap15q23LodgepolePineCones.csv", col_types = cols(
+  habitat = col_factor() ))
+
+# 15-a.####
+# a. What do we label this type of comparison?
+# This type of comparison is a linear regression, because we want to know how much variation in pine cone mass  is 
+# is explained by the presence of squirrels on an island.
+
+# 15-c.####
+# c. Using these data, carry out a test of the differences among the means of all three groups.
+
+
+#### Problem 15-26 ####
+# Use the data to perform the correct test.  Please show code for all steps in your process.
+
+#### Problem 15-30 and/or 15-31 (same data in both problems) ####
+# Use the data to perform the correct test.  Please show code for all steps in your process.
+
+# Full Analysis 
 
 # Read in Darnell and Munguia (2011) file
-Crabs <- read_csv("datasets/abd/chapter15/chap15q30FiddlerCrabFans.csv")
+Crabs <- read_csv("datasets/abd/chapter15/chap15q30FiddlerCrabFans.csv", col_types = cols(
+  crabType = col_factor() ))
 # Remove N/A from data
 Crabs <- na.omit(Crabs) 
 
@@ -103,8 +126,7 @@ anova(model01)
 # We found that mean heat gain was significantly different among crab groups.
 # (One-way ANOVA: F= 20.312;df= 3,80; P= 6.997e-10)
 
-# To address the second question, Is there a sigificant difference between the two male groups “Major removed” 
-# and “Minor removed?” We should use a Tukey test
 
-
+tukey <- glht(model03, linfct = mcp(treatmentGroup = "Tukey"))
+summary(tukey)
 

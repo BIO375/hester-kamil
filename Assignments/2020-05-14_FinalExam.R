@@ -112,7 +112,7 @@ ggplot(Insulation)+
 
 # Heat loss Analysis: The histogram is not normally distributed, there appears to be a right skew with a high number outlier 
 # as well. The median is low in the IQR box, but the whisker lengths are even. No outliers are visible on the 
-# boxplot, and the mean is abover the median. Most points follow a general trendline. I would recommend this data also 
+# boxplot, and the mean is above the median. Most points follow a general trendline. I would recommend this data also 
 # be transformed to see if increased normal distribution could occur in the histogram. 
 
 ### (d.) ####
